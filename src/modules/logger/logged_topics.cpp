@@ -58,10 +58,10 @@ void LoggedTopics::add_default_topics()
 	add_topic("ekf_gps_drift");
 	add_topic("esc_status", 250);
 	add_topic("estimator_innovation_test_ratios", 200);
-	add_topic("estimator_innovation_variances", 200);
-	add_topic("estimator_innovations", 200);
-	add_topic("estimator_sensor_bias", 1000);
-	add_topic("estimator_status", 200);
+	add_topic("estimator_innovation_variances", 10);
+	add_topic("estimator_innovations", 10);
+	add_topic("estimator_sensor_bias", 10);
+	add_topic("estimator_status", 10);
 	add_topic("home_position");
 	add_topic("hover_thrust_estimate", 100);
 	add_topic("input_rc", 500);
@@ -93,8 +93,8 @@ void LoggedTopics::add_default_topics()
 	add_topic("vehicle_control_mode");
 	add_topic("vehicle_global_position", 200);
 	add_topic("vehicle_land_detected");
-	add_topic("vehicle_local_position", 100);
-	add_topic("vehicle_local_position_setpoint", 100);
+	add_topic("vehicle_local_position", 0);
+	add_topic("vehicle_local_position_setpoint", 0);
 	add_topic("vehicle_magnetometer", 200);
 	add_topic("vehicle_rates_setpoint", 20);
 	add_topic("vehicle_roi", 1000);

@@ -106,7 +106,7 @@ MavlinkReceiver::acknowledge(uint8_t sysid, uint8_t compid, uint16_t command, ui
 
 	_cmd_ack_pub.publish(command_ack);
 }
-
+// static orb_advert_t mavlink_log_pub = nullptr;
 void
 MavlinkReceiver::handle_message(mavlink_message_t *msg)
 {
@@ -156,10 +156,13 @@ MavlinkReceiver::handle_message(mavlink_message_t *msg)
 		break;
 
 	case MAVLINK_MSG_ID_VISION_POSITION_ESTIMATE:
+		// mavlink_log_critical(&mavlink_log_pub, "vision_pose_receive");
 		handle_message_vision_position_estimate(msg);
 		break;
 
 	case MAVLINK_MSG_ID_ODOMETRY:
+		// mavlink_log_critical(&mavlink_log_pub, "odometry_receive");
+
 		handle_message_odometry(msg);
 		break;
 
@@ -1259,6 +1262,7 @@ MavlinkReceiver::handle_message_odometry(mavlink_message_t *msg)
 	odometry.timestamp = hrt_absolute_time();
 	odometry.timestamp_sample = _mavlink_timesync.sync_stamp(odom.time_usec);
 
+	// mavlink_log_critical(&mavlink_log_pub, "odom.vx: %f",  double(odom.vx));
 	/* The position is in a local FRD frame */
 	odometry.x = odom.x;
 	odometry.y = odom.y;
@@ -1337,7 +1341,8 @@ MavlinkReceiver::handle_message_odometry(mavlink_message_t *msg)
 			_mocap_odometry_pub.publish(odometry);
 
 		} else {
-			PX4_ERR("Estimator source %u not supported. Unable to publish pose and velocity", odom.estimator_type);
+			_visual_odometry_pub.publish(odometry);
+			// PX4_ERR("Estimator source %u not supported. Unable to publish pose and velocity", odom.estimator_type);
 		}
 
 	} else {
