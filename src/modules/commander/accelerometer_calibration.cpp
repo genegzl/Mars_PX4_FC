@@ -228,6 +228,7 @@ int do_accel_calibration(orb_advert_t *mavlink_log_pub)
 	/* measurements completed successfully, rotate calibration values */
 	int32_t board_rotation_int = 0;
 	param_get(param_find("SENS_BOARD_ROT"), &board_rotation_int);
+	// PX4_INFO("board_rotation_int_1 = %d", board_rotation_int);
 	const Dcmf board_rotation = get_rot_matrix((enum Rotation)board_rotation_int);
 	const Dcmf board_rotation_t = board_rotation.transpose();
 
@@ -393,6 +394,7 @@ static calibrate_return read_accelerometer_avg(float (&accel_avg)[MAX_ACCEL_SENS
 
 	int32_t board_rotation_int = 0;
 	param_get(param_find("SENS_BOARD_ROT"), &board_rotation_int);
+	// PX4_INFO("board_rotation_int_2 = %d", board_rotation_int);
 
 	const Dcmf board_rotation = board_rotation_offset * get_rot_matrix((enum Rotation)board_rotation_int);
 
@@ -518,6 +520,7 @@ int do_level_calibration(orb_advert_t *mavlink_log_pub)
 
 	int32_t board_rot_current = 0;
 	param_get(param_find("SENS_BOARD_ROT"), &board_rot_current);
+	// PX4_INFO("board_rotation_int_3 = %d", board_rot_current);
 
 	const Dcmf board_rotation_offset{Eulerf{radians(roll_offset_current), radians(pitch_offset_current), 0.f}};
 
