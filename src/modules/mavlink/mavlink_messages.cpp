@@ -64,6 +64,7 @@
 #include <uORB/topics/actuator_armed.h>
 #include <uORB/topics/actuator_controls.h>
 #include <uORB/topics/actuator_outputs.h>
+#include <uORB/topics/airspeed.h>
 #include <uORB/topics/airspeed_validated.h>
 #include <uORB/topics/battery_status.h>
 #include <uORB/topics/camera_capture.h>
@@ -5243,6 +5244,72 @@ protected:
 	}
 };
 
+// Publish Airspeed Sensor Data to Mavlink
+class MavlinkStreamAirspeed : public MavlinkStream
+{
+public:
+	const char *get_name() const override
+	{
+		return MavlinkStreamAirspeed::get_name_static();
+	}
+
+	static constexpr const char *get_name_static()
+	{
+		return "AIRSPEED_M_S";
+	}
+
+	static constexpr uint16_t get_id_static()
+	{
+		return MAVLINK_MSG_ID_AIRSPEED_M_S;
+	}
+
+	uint16_t get_id() override
+	{
+		return get_id_static();
+	}
+
+	static MavlinkStream *new_instance(Mavlink *mavlink)
+	{
+		return new MavlinkStreamAirspeed(mavlink);
+	}
+
+	unsigned get_size() override
+	{
+		return _airspeed_sub.advertised() ? MAVLINK_MSG_ID_AIRSPEED_M_S + MAVLINK_NUM_NON_PAYLOAD_BYTES : 0;
+	}
+
+private:
+	uORB::Subscription _airspeed_sub{ORB_ID(airspeed)};
+
+	/* do not allow top copying this class */
+	MavlinkStreamAirspeed(MavlinkStreamAirspeed &) = delete;
+	MavlinkStreamAirspeed &operator = (const MavlinkStreamAirspeed &) = delete;
+
+protected:
+	explicit MavlinkStreamAirspeed(Mavlink *mavlink) : MavlinkStream(mavlink)
+	{}
+
+	bool send(const hrt_abstime t) override
+	{
+		airspeed_s airspeed;
+
+		if (_airspeed_sub.update(&airspeed)) {
+			mavlink_airspeed_m_s_t msg{};
+
+			msg.time_usec = airspeed.timestamp;
+			msg.indicated_airspeed_m_s = airspeed.indicated_airspeed_m_s;
+			msg.true_airspeed_m_s = airspeed.true_airspeed_m_s;
+			msg.air_temperature_celsius = airspeed.air_temperature_celsius;
+			msg.confidence = airspeed.confidence;
+			mavlink_msg_airspeed_m_s_send_struct(_mavlink->get_channel(), &msg);
+
+			return true;
+		}
+
+		return false;
+	}
+};
+
 static const StreamListItem streams_list[] = {
 	create_stream_list_item<MavlinkStreamHeartbeat>(),
 	create_stream_list_item<MavlinkStreamStatustext>(),
@@ -5307,6 +5374,7 @@ static const StreamListItem streams_list[] = {
 	create_stream_list_item<MavlinkStreamProtocolVersion>(),
 	create_stream_list_item<MavlinkStreamFlightInformation>(),
 	create_stream_list_item<MavlinkStreamStorageInformation>(),
+	create_stream_list_item<MavlinkStreamAirspeed>(),
 	create_stream_list_item<MavlinkStreamRawRpm>()
 };
 

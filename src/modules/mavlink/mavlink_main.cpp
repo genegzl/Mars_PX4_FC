@@ -1251,7 +1251,7 @@ int
 Mavlink::configure_stream(const char *stream_name, const float rate)
 {
 	PX4_DEBUG("configure_stream(%s, %.3f)", stream_name, (double)rate);
-
+	// PX4_WARN("configure_stream(%s, %.3f)", stream_name, (double)rate);
 	/* calculate interval in us, -1 means unlimited stream, 0 means disabled */
 	int interval = 0;
 
@@ -1614,6 +1614,7 @@ Mavlink::configure_streams_to_default(const char *configure_single_stream)
 		configure_stream_local("VFR_HUD", 4.0f);
 		configure_stream_local("VIBRATION", 0.1f);
 		configure_stream_local("WIND_COV", 0.5f);
+		configure_stream_local("AIRSPEED_M_S",5.0f);
 		break;
 
 	case MAVLINK_MODE_ONBOARD:
@@ -1663,6 +1664,7 @@ Mavlink::configure_streams_to_default(const char *configure_single_stream)
 		configure_stream_local("VFR_HUD", 10.0f);
 		configure_stream_local("VIBRATION", 0.5f);
 		configure_stream_local("WIND_COV", 10.0f);
+		configure_stream_local("AIRSPEED_M_S",5.0f);
 		break;
 
 	case MAVLINK_MODE_EXTVISION:
@@ -1710,6 +1712,7 @@ Mavlink::configure_streams_to_default(const char *configure_single_stream)
 		configure_stream_local("VFR_HUD", 4.0f);
 		configure_stream_local("VIBRATION", 0.5f);
 		configure_stream_local("WIND_COV", 1.0f);
+		configure_stream_local("AIRSPEED_M_S",5.0f);
 		break;
 
 
@@ -1730,6 +1733,7 @@ Mavlink::configure_streams_to_default(const char *configure_single_stream)
 		configure_stream_local("VFR_HUD", 25.0f);
 		configure_stream_local("VIBRATION", 0.5f);
 		configure_stream_local("WIND_COV", 2.0f);
+		configure_stream_local("AIRSPEED_M_S",5.0f);
 		break;
 
 	case MAVLINK_MODE_MAGIC:
@@ -1787,6 +1791,7 @@ Mavlink::configure_streams_to_default(const char *configure_single_stream)
 		configure_stream_local("VFR_HUD", 20.0f);
 		configure_stream_local("VIBRATION", 2.5f);
 		configure_stream_local("WIND_COV", 1.0f);
+		configure_stream_local("AIRSPEED_M_S",5.0f);
 		break;
 
 	case MAVLINK_MODE_IRIDIUM:
