@@ -220,9 +220,15 @@
  * FMU_CAP2 : PB3  : TIM2_CH2
  * FMU_CAP3 : PB11 : TIM2_CH4
  */
+
+//pwm capture only has 3 channels (CAP1,2 and 3 related to TIM2 CH1,2 and 4, respectively).
+//Although the pixhawk4 mini has 4 physical channels but the cap4 has no circuit connection. added by cn.
 #define GPIO_TIM2_CH1_IN     /* PA5   T22C1  FMU_CAP1 */ GPIO_TIM2_CH1IN_3
 #define GPIO_TIM2_CH2_IN     /* PB3   T22C2  FMU_CAP2 */ GPIO_TIM2_CH2IN_2
 #define GPIO_TIM2_CH4_IN     /* PB11  T22C4  FMU_CAP3 */ GPIO_TIM2_CH4IN_2
+
+#define GPIO_TIM4_CH2_IN     /* PD13   T22C1  FMU_CAP1 */ GPIO_TIM4_CH2IN_2
+#define GPIO_TIM4_CH3_IN     /* PD14   T22C2  FMU_CAP2 */ GPIO_TIM4_CH3IN_2
 
 #define DIRECT_PWM_CAPTURE_CHANNELS  3
 
@@ -308,22 +314,58 @@
 #define RC_SERIAL_SINGLEWIRE
 
 /* Input Capture Channels. */
-#define INPUT_CAP1_TIMER                  2
-#define INPUT_CAP1_CHANNEL     /* T4C1 */ 1
-#define GPIO_INPUT_CAP1        /*  PA5 */ GPIO_TIM2_CH1_IN
+#define INPUT_CAP_TIMER                          2 //first group timer for pwm input, add cn
 
-#define INPUT_CAP2_TIMER                  2
-#define INPUT_CAP2_CHANNEL     /* T4C2 */ 2
-#define GPIO_INPUT_CAP2        /*  PB3 */ GPIO_TIM2_CH2_IN
+#define INPUT_CAP1                               1
+#define INPUT_CAP1_GPIO                          GPIO_TIM2_CH1_IN //PA5, TIM2-CH1
 
-#define INPUT_CAP3_TIMER                  2
-#define INPUT_CAP3_CHANNEL     /* T4C4 */ 4
-#define GPIO_INPUT_CAP3        /* PB11 */ GPIO_TIM2_CH4_IN
+#define INPUT_CAP2                               2
+#define INPUT_CAP2_GPIO                          GPIO_TIM2_CH2_IN //PB3, TIM2-CH2
+
+#define INPUT_CAP3                               3
+#define INPUT_CAP3_GPIO                          GPIO_TIM2_CH4_IN //PB11, TIM2-CH4
+
+//No CAP4 because of hardware design, refer to pin mapping excel
+#define INPUT_CAP4                               4
+#define INPUT_CAP4_GPIO                          0 //not exist in current pixhawk mini 4, add cn
+
+// Input Capture Channels, Group 2
+#define INPUT_CAP_TIMER_G2                       4 //second group timer for pwm input, add cn
+
+#define INPUT_CAP1_G2                            2
+#define INPUT_CAP1_GPIO_G2                       GPIO_TIM4_CH2_IN //PD13, TIM4-CH2
+
+#define INPUT_CAP2_G2                            3
+#define INPUT_CAP2_GPIO_G2                       GPIO_TIM4_CH3_IN //PD14, TIM4-CH3
+
+//Define for multi-channel capture
+#define INPUT_CAP1_CAP3                          101  //use CAP1 and CAP3 at the same time, added cn
+#define INPUT_CAP1_CAP2_CAP3                     102  //use all CAP at the same time (except CAP4), added cn
+#define INPUT_TIM2_CH1_CH4_TIM4_CH2_CH3          201  //use TIM2 CH1(CAP1) and CH4(CAP3), TIM4 CH2 and CH3
 
 /* PWM input driver. Use FMU AUX5 pins attached to timer4 channel 2 */
-#define PWMIN_TIMER                       4
-#define PWMIN_TIMER_CHANNEL    /* T4C2 */ 2
-#define GPIO_PWM_IN            /* PD13 */ GPIO_TIM4_CH2IN_2
+//#define PWMIN_TIMER                       4
+//#define PWMIN_TIMER_CHANNEL    /* T4C2 */ 2
+//#define GPIO_PWM_IN            /* PD13 */ GPIO_TIM4_CH2IN_2
+
+#define PWMIN_TIMER		             INPUT_CAP_TIMER
+
+#define PWMIN_TIMER_G2		         INPUT_CAP_TIMER_G2
+
+//#define PWMIN_TIMER_CHANNEL	     INPUT_CAP1//single channel, cn
+//#define PWMIN_TIMER_CHANNEL	     INPUT_CAP2//single channel, cn
+//#define PWMIN_TIMER_CHANNEL	     INPUT_CAP1_CAP3//multi-channel, cn
+//#define PWMIN_TIMER_CHANNEL	     INPUT_CAP1_CAP2_CAP3//multi-channel, cn
+#define PWMIN_TIMER_CHANNEL	     INPUT_TIM2_CH1_CH4_TIM4_CH2_CH3//multi-channel, cn
+
+#define GPIO_PWM_IN		         INPUT_CAP1_GPIO //for single channel
+
+#define GPIO_PWM_IN1		     INPUT_CAP1_GPIO//cn
+#define GPIO_PWM_IN2		     INPUT_CAP2_GPIO//cn
+#define GPIO_PWM_IN3		     INPUT_CAP3_GPIO//cn
+
+#define GPIO_PWM_IN1_G2		     INPUT_CAP1_GPIO_G2//cn
+#define GPIO_PWM_IN2_G2		     INPUT_CAP2_GPIO_G2//cn
 
 /* Shared pins Both FMU and PX4IO control/monitor
  * FMU Initializes these pins to passive input until it is known

@@ -118,7 +118,6 @@
 # error INPUT_TIMER must be a value between 1 and 12
 #endif
 
-
 #else // F4, F7
 
 #if   INPUT_TIMER == 1
@@ -184,5 +183,13 @@
 #else
 # error INPUT_TIMER must be a value between 1 and 12
 #endif
+
+//add cn
+# define TIMER_BASE_G2	                STM32_TIM4_BASE
+# define TIMER_CLOCK_POWER_REG_G2		STM32_RCC_APB1ENR
+# define TIMER_CLOCK_POWER_BIT_G2		RCC_APB1ENR_TIM4EN
+# define TIMER_IRQ_REG_G2		        STM32_IRQ_TIM4
+# define TIMER_CLOCK_G2		            STM32_APB1_TIM4_CLKIN
+//end cn
 
 #endif

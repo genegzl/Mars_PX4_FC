@@ -123,6 +123,12 @@ void LoggedTopics::add_default_topics()
 	add_topic_multi("vehicle_imu", 500);
 	add_topic_multi("vehicle_imu_status", 1000);
 
+	//add_topic_multi("pwm_captures");
+	add_topic("pwm_captures_0");
+	add_topic("pwm_captures_1");
+	add_topic("pwm_captures_2");
+	add_topic("pwm_captures_3");
+
 #ifdef CONFIG_ARCH_BOARD_PX4_SITL
 	add_topic("actuator_controls_virtual_fw");
 	add_topic("actuator_controls_virtual_mc");

@@ -31,3 +31,10 @@ fw_pos_control_l1 start vtol
 # Multicopter for now until we have something for VTOL
 #
 land_detector start vtol
+
+
+###### below added by cn
+#
+# Start PWM Capture function
+#
+pwm_input start
