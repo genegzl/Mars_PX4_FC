@@ -178,5 +178,8 @@
         "workbench.statusBar.feedback.visible": false,
         "yaml.schemas": {
                 "${workspaceRoot}/validation/module_schema.yaml": "${workspaceRoot}/src/modules/*/module.yaml"
-        }
+	},
+	"python.autoComplete.extraPaths": [
+		"/opt/ros/melodic/lib/python2.7/dist-packages"
+	]
 }
