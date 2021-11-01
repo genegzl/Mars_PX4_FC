@@ -84,7 +84,7 @@ bool PreFlightCheck::airspeedCheck(orb_advert_t *mavlink_log_pub, vehicle_status
 	 * Negative and positive offsets are considered. Do not check anymore while arming because pitot cover
 	 * might have been removed.
 	 */
-	if (fabsf(airspeed.indicated_airspeed_m_s) > 4.0f && prearm) {
+	if (fabsf(airspeed.indicated_airspeed_m_s) > 10.0f && prearm) { // Change 4.0f to 10.0f. More suitable for Tail-sitter when taking off in a windy environment
 		if (report_fail) {
 			mavlink_log_critical(mavlink_log_pub, "Preflight Fail: check Airspeed Cal or Pitot");
 		}
