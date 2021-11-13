@@ -774,11 +774,13 @@ Mission::set_mission_items()
 					pos_sp_triplet->current.disable_weather_vane = true;
 
 					/* set yaw setpoint to heading of VTOL_TAKEOFF wp against current position */
-					_mission_item.yaw = get_bearing_to_next_waypoint(
-								    _navigator->get_global_position()->lat, _navigator->get_global_position()->lon,
-								    _mission_item.lat, _mission_item.lon);
-
+					// _mission_item.yaw = get_bearing_to_next_waypoint(
+					// 			    _navigator->get_global_position()->lat, _navigator->get_global_position()->lon,
+					// 			    _mission_item.lat, _mission_item.lon);
+					_mission_item.yaw = _navigator->get_position_setpoint_triplet()->current.yaw;
 					_mission_item.force_heading = true;
+					// _mission_item.yaw = NAN;
+
 
 					new_work_item_type = WORK_ITEM_TYPE_ALIGN;
 
