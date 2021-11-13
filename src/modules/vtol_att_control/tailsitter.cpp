@@ -41,11 +41,15 @@
 
 #include "tailsitter.h"
 #include "vtol_att_control_main.h"
+#include <systemlib/mavlink_log.h>
+
 
 #define PITCH_TRANSITION_FRONT_P1 -1.1f	// pitch angle to switch to TRANSITION_P2
 #define PITCH_TRANSITION_BACK -0.25f	// pitch angle to switch to MC
 
 using namespace matrix;
+
+// static  orb_advert_t mavlink_log_pub = nullptr;
 
 Tailsitter::Tailsitter(VtolAttitudeControl *attc) :
 	VtolType(attc)
@@ -267,7 +271,9 @@ void Tailsitter::waiting_on_tecs()
 void Tailsitter::update_fw_state()
 {
 	VtolType::update_fw_state();
-
+	_mc_roll_weight = 1.0f;
+	_mc_pitch_weight = 1.0f;
+	_mc_yaw_weight = 1.0f;
 	// allow fw yawrate control via multirotor roll actuation. this is useful for vehicles
 	// which don't have a rudder to coordinate turns
 	if (_params->diff_thrust == 1) {
@@ -278,6 +284,7 @@ void Tailsitter::update_fw_state()
 /**
 * Write data to actuator output topic.
 */
+// static int ii = 0;
 void Tailsitter::fill_actuator_outputs()
 {
 	_actuators_out_0->timestamp = hrt_absolute_time();
@@ -292,7 +299,10 @@ void Tailsitter::fill_actuator_outputs()
 		_actuators_mc_in->control[actuator_controls_s::INDEX_PITCH] * _mc_pitch_weight;
 	_actuators_out_0->control[actuator_controls_s::INDEX_YAW] = _actuators_mc_in->control[actuator_controls_s::INDEX_YAW] *
 			_mc_yaw_weight;
-
+	// ii++;
+	// if (ii % 25 == 1){
+	// 	mavlink_log_critical(&mavlink_log_pub, "actuator controls to MC: %.5f,%.5f,%.5f", (double)(_mc_roll_weight), (double)(_mc_pitch_weight),(double)(_mc_yaw_weight));
+	// }
 	if (_vtol_schedule.flight_mode == vtol_mode::FW_MODE) {
 		_actuators_out_0->control[actuator_controls_s::INDEX_THROTTLE] =
 			_actuators_fw_in->control[actuator_controls_s::INDEX_THROTTLE];
@@ -307,9 +317,15 @@ void Tailsitter::fill_actuator_outputs()
 		_actuators_out_1->control[actuator_controls_s::INDEX_PITCH] = 0;
 
 	} else {
-		_actuators_out_1->control[actuator_controls_s::INDEX_ROLL] =
-			_actuators_fw_in->control[actuator_controls_s::INDEX_ROLL];
-		_actuators_out_1->control[actuator_controls_s::INDEX_PITCH] =
-			_actuators_fw_in->control[actuator_controls_s::INDEX_PITCH];
+		// _actuators_out_1->control[actuator_controls_s::INDEX_ROLL] =
+		// 	_actuators_fw_in->control[actuator_controls_s::INDEX_ROLL];
+		_actuators_out_0->control[actuator_controls_s::INDEX_ROLL] = _actuators_fw_in->control[actuator_controls_s::INDEX_YAW];
+		// _actuators_out_0->control[actuator_controls_s::INDEX_PITCH] = _actuators_fw_in->control[actuator_controls_s::INDEX_PITCH];
+		_actuators_out_0->control[actuator_controls_s::INDEX_YAW] = -_actuators_fw_in->control[actuator_controls_s::INDEX_ROLL];
+		// _actuators_out_1->control[actuator_controls_s::INDEX_PITCH] =
+		// 	_actuators_fw_in->control[actuator_controls_s::INDEX_PITCH];
+		_actuators_out_1->control[actuator_controls_s::INDEX_ROLL] = 0;
+		_actuators_out_1->control[actuator_controls_s::INDEX_PITCH] = 0;
 	}
+
 }

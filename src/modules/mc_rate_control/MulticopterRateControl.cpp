@@ -248,7 +248,7 @@ MulticopterRateControl::Run()
 		if (_v_control_mode.flag_control_rates_enabled && !_actuators_0_circuit_breaker_enabled) {
 
 			// reset integral if disarmed
-			if (!_v_control_mode.flag_armed || _vehicle_status.vehicle_type != vehicle_status_s::VEHICLE_TYPE_ROTARY_WING) {
+			if (!_v_control_mode.flag_armed ) { //|| _vehicle_status.vehicle_type != vehicle_status_s::VEHICLE_TYPE_ROTARY_WING
 				_rate_control.resetIntegral();
 			}
 
