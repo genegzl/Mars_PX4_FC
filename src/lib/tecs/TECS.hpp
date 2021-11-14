@@ -270,7 +270,7 @@ private:
 	bool _uncommanded_descent_recovery{false};			///< true when a continuous descent caused by an unachievable airspeed demand has been detected
 	bool _climbout_mode_active{false};				///< true when in climbout mode
 	bool _airspeed_enabled{false};					///< true when airspeed use has been enabled
-	bool _states_initialized{false};					///< true when TECS states have been iniitalized
+	bool _states_initialized{false};				///< true when TECS states have been initialized
 	bool _in_air{false};						///< true when the vehicle is flying
 
 	/**

@@ -282,6 +282,14 @@ void TECS::_update_throttle_setpoint(const float throttle_cruise, const matrix::
 		// Adjust the demanded total energy rate to compensate for induced drag rise in turns.
 		// Assume induced drag scales linearly with normal load factor.
 		// The additional normal load factor is given by (1/cos(bank angle) - 1)
+		/*
+		   For ZYX Tail-Bryan euler angle:
+		 	R(0,1) = c1s2s3-c3s1,  R(1,1) = c1c3+s1s2s3
+		   cosPhi = sqrt(s2^2*s3^2+c3^2)
+
+		   The normal load factor if defined as k = L_norm/G. When bank angle exists, the lift
+		   should be no less than L_norm/cosPhi. Thus the banked turn load factor should be k/cosPhi.
+		*/
 		float cosPhi = sqrtf((rotMat(0, 1) * rotMat(0, 1)) + (rotMat(1, 1) * rotMat(1, 1)));
 		STE_rate_setpoint = STE_rate_setpoint + _load_factor_correction * (1.0f / constrain(cosPhi, 0.1f, 1.0f) - 1.0f);
 
