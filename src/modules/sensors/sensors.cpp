@@ -522,21 +522,21 @@ void Sensors::Run()
 		_mag_comp_type = (MagCompensationType)_parameters.mag_comp_type;
 
 		//update power signal for mag compensation
-		if (_mag_comp_type == MagCompensationType::Throttle) {
-			actuator_controls_s controls {};
+		// if (_mag_comp_type == MagCompensationType::Throttle) {
+		// 	actuator_controls_s controls {};
 
-			if (_actuator_ctrl_0_sub.update(&controls)) {
-				_voted_sensors_update.update_mag_comp_power(controls.control[actuator_controls_s::INDEX_THROTTLE]);
-			}
+		// 	if (_actuator_ctrl_0_sub.update(&controls)) {
+		// 		_voted_sensors_update.update_mag_comp_power(controls.control[actuator_controls_s::INDEX_THROTTLE]);
+		// 	}
 
-		} else if (_mag_comp_type == MagCompensationType::Current_inst0
-			   || _mag_comp_type == MagCompensationType::Current_inst1) {
+		// } else if (_mag_comp_type == MagCompensationType::Current_inst0
+		// 	   || _mag_comp_type == MagCompensationType::Current_inst1) {
 			battery_status_s bat_stat {};
 
 			if (_battery_status_sub.update(&bat_stat)) {
-				_voted_sensors_update.update_mag_comp_power(bat_stat.current_a * 0.001f); //current in [kA]
+				_voted_sensors_update.update_mag_comp_power(bat_stat.current_filtered_a * 0.001f); //current in [kA]  current_a
 			}
-		}
+		// }
 	}
 
 	vehicle_magnetometer_s magnetometer{};

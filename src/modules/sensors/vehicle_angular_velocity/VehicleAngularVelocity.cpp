@@ -48,7 +48,8 @@ VehicleAngularVelocity::VehicleAngularVelocity() :
 	_lp_filter_velocity.set_cutoff_frequency(kInitialRateHz, _param_imu_gyro_cutoff.get());
 	_notch_filter_velocity.setParameters(kInitialRateHz, _param_imu_gyro_nf_freq.get(), _param_imu_gyro_nf_bw.get());
 	_notch_filter_velocity_2nd.setParameters(kInitialRateHz, 67, 30);				// honghu propeller frequency
-	_notch_filter_velocity_3rd.setParameters(kInitialRateHz, 112, 50);
+	_notch_filter_velocity_3rd.setParameters(kInitialRateHz, 94, 50);
+	_notch_filter_velocity_4rd.setParameters(kInitialRateHz, 112, 50);
 
 	_lp_filter_acceleration.set_cutoff_frequency(kInitialRateHz, _param_imu_dgyro_cutoff.get());
 }
@@ -154,8 +155,11 @@ void VehicleAngularVelocity::CheckFilters()
 			_notch_filter_velocity_2nd.setParameters(_filter_sample_rate, 67, 30);
 			_notch_filter_velocity_2nd.reset(_angular_velocity_prev);
 
-			_notch_filter_velocity_3rd.setParameters(_filter_sample_rate, 112, 50);
+			_notch_filter_velocity_3rd.setParameters(_filter_sample_rate, 94, 50);
 			_notch_filter_velocity_3rd.reset(_angular_velocity_prev);
+
+			_notch_filter_velocity_4rd.setParameters(_filter_sample_rate, 112, 50);
+			_notch_filter_velocity_4rd.reset(_angular_velocity_prev);
 
 			_lp_filter_acceleration.set_cutoff_frequency(_filter_sample_rate, _param_imu_dgyro_cutoff.get());
 			_lp_filter_acceleration.reset(_angular_acceleration_prev);
@@ -300,7 +304,9 @@ void VehicleAngularVelocity::Run()
 
 			const Vector3f angular_velocity_notched_3rd{_notch_filter_velocity_3rd.apply(angular_velocity_notched_2nd)};
 
-			const Vector3f angular_velocity{_lp_filter_velocity.apply(angular_velocity_notched_3rd)};
+			const Vector3f angular_velocity_notched_4rd{_notch_filter_velocity_4rd.apply(angular_velocity_notched_3rd)};
+
+			const Vector3f angular_velocity{_lp_filter_velocity.apply(angular_velocity_notched_4rd)};
 
 			// const Vector3f angular_velocity{_lp_filter_velocity.apply(angular_velocity_notched)};
 

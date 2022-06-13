@@ -110,6 +110,8 @@ private:
 	math::NotchFilter<matrix::Vector3f> _notch_filter_velocity{};
 	math::NotchFilter<matrix::Vector3f> _notch_filter_velocity_2nd{};
 	math::NotchFilter<matrix::Vector3f> _notch_filter_velocity_3rd{};
+	math::NotchFilter<matrix::Vector3f> _notch_filter_velocity_4rd{};
+
 
 	// angular acceleration filter
 	math::LowPassFilter2pVector3f _lp_filter_acceleration{kInitialRateHz, 30.0f};
